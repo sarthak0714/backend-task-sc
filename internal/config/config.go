@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -14,13 +13,18 @@ type Config struct {
 
 // Loads variables form Environment and returns Config struct
 func LoadConfig() *Config {
-	err := godotenv.Load()
-	if err != nil {
-		fmt.Println("Error loading environment file")
-	}
+	// Load .env file if it exists
+	_ = godotenv.Load()
 
 	return &Config{
-		DatabaseURL: os.Getenv("DATABASE_URL"),
-		Port:        ":" + os.Getenv("PORT"),
+		DatabaseURL: getEnv("DATABASE_URL", ""),
+		Port:        ":" + getEnv("PORT", "8080"),
 	}
+}
+
+func getEnv(key, fallback string) string {
+	if value, exists := os.LookupEnv(key); exists {
+		return value
+	}
+	return fallback
 }
