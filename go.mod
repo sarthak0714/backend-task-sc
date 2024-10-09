@@ -3,7 +3,6 @@ module github.com/sarthak0714/backend-task-sc
 go 1.22.2
 
 require (
-	github.com/jinzhu/gorm v1.9.16
 	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo/v4 v4.12.0
 	gorm.io/driver/postgres v1.5.9

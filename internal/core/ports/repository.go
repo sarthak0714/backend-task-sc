@@ -12,6 +12,5 @@ type TradeRepository interface {
 }
 
 type PortfolioRepository interface {
-	UpsertPortfolio(portfolio *domain.Portfolio) error
 	FetchPortfolio(userID string) ([]*domain.Portfolio, error)
 }

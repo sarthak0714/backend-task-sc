@@ -2,19 +2,18 @@ package domain
 
 import (
 	"time"
-
-	"github.com/jinzhu/gorm"
 )
 
 type TradeType string
 
+// Type enum
 const (
 	Buy  TradeType = "BUY"
 	Sell TradeType = "SELL"
 )
 
 type Trade struct {
-	gorm.Model
+	Id        int64     `json:"id"`
 	UserID    string    `gorm:"index" json:"userId"`
 	Ticker    string    `json:"ticker"`
 	Type      TradeType `json:"type"`
@@ -24,8 +23,7 @@ type Trade struct {
 }
 
 type Portfolio struct {
-	gorm.Model
-	UserID          string    `gorm:"index" json:"userId"`
+	UserID          string    `gorm:"index" json:"userId`
 	Ticker          string    `json:"ticker"`
 	Quantity        int       `json:"quantity"`
 	AverageBuyPrice float64   `json:"averageBuyPrice"`

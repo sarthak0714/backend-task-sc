@@ -12,6 +12,7 @@ type Config struct {
 	Port        string
 }
 
+// Loads variables form Environment and returns Config struct
 func LoadConfig() *Config {
 	err := godotenv.Load()
 	if err != nil {
