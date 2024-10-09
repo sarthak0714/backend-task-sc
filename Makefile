@@ -1,4 +1,4 @@
-.PHONY: run build clean
+.PHONY: run build clean swagger
 
 run: build
 	@./bin/server
@@ -9,3 +9,6 @@ build:
 
 clean:
 	@rm -rf ./bin/server
+
+swagger:
+	@swag init -g cmd/main.go

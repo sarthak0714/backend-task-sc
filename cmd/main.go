@@ -2,10 +2,13 @@ package main
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	echoSwagger "github.com/swaggo/echo-swagger"
 
+	_ "github.com/sarthak0714/backend-task-sc/docs"
 	"github.com/sarthak0714/backend-task-sc/internal/adapters/handlers"
 	"github.com/sarthak0714/backend-task-sc/internal/adapters/repositories"
 	"github.com/sarthak0714/backend-task-sc/internal/config"
@@ -13,6 +16,9 @@ import (
 	"github.com/sarthak0714/backend-task-sc/pkg/utils"
 )
 
+// @title smallcase Backend Task
+// @version 1.0
+// @description portfolio tracking API.
 func main() {
 	// Initialize SQL repository
 	cfg := config.LoadConfig()
@@ -35,7 +41,10 @@ func main() {
 	// Initialize handlers
 	h := handlers.NewAPIHandler(tradeService, portfolioService)
 
-	e.GET("/", h.Root)
+	e.GET("/", func(c echo.Context) error {
+		return c.Redirect(http.StatusMovedPermanently, "/swagger/index.html")
+	})
+	e.GET("/status", h.Root)
 
 	// Trade Routes
 	e.POST("/trades", h.AddTrade)
@@ -45,7 +54,10 @@ func main() {
 
 	//Portfolio Routes
 	e.GET("/portfolio/:userId", h.FetchPortfolio)
-	e.GET("/returns/:userId", h.FetchReturns)
+	e.GET("/returns", h.FetchReturns)
+
+	// Swagger route
+	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	e.Logger.Fatal(e.Start(cfg.Port))
 }

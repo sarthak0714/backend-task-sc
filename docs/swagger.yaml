@@ -1,0 +1,248 @@
+definitions:
+  domain.Portfolio:
+    properties:
+      averageBuyPrice:
+        type: number
+      lastUpdated:
+        type: string
+      quantity:
+        type: integer
+      ticker:
+        type: string
+      userID:
+        type: string
+    type: object
+  domain.Returns:
+    properties:
+      cumulativeReturns:
+        type: number
+      userId:
+        type: string
+    type: object
+  domain.Trade:
+    properties:
+      id:
+        type: integer
+      price:
+        type: number
+      quantity:
+        type: integer
+      ticker:
+        type: string
+      timestamp:
+        type: string
+      type:
+        $ref: '#/definitions/domain.TradeType'
+      userId:
+        type: string
+    type: object
+  domain.TradeType:
+    enum:
+    - BUY
+    - SELL
+    type: string
+    x-enum-varnames:
+    - Buy
+    - Sell
+info:
+  contact: {}
+  description: portfolio tracking API.
+  title: smallcase Backend Task
+  version: "1.0"
+paths:
+  /:
+    get:
+      description: Returns a simple message indicating the API is working
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Root endpoint
+      tags:
+      - root
+  /portfolio/{userId}:
+    get:
+      description: Fetches the portfolio for a specific user
+      parameters:
+      - description: User ID
+        in: path
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Portfolio'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Fetch user portfolio
+      tags:
+      - portfolio
+  /returns:
+    get:
+      description: Fetches the returns for a specific user
+      parameters:
+      - description: User ID
+        in: query
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Returns'
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Fetch user returns
+      tags:
+      - returns
+  /trades:
+    post:
+      consumes:
+      - application/json
+      description: Adds a new trade to the system
+      parameters:
+      - description: Trade object
+        in: body
+        name: trade
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Trade'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.Trade'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Add a new trade
+      tags:
+      - trades
+  /trades/{id}:
+    delete:
+      description: Removes an existing trade from the system
+      parameters:
+      - description: Trade ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Remove a trade
+      tags:
+      - trades
+    put:
+      consumes:
+      - application/json
+      description: Updates an existing trade in the system
+      parameters:
+      - description: Trade ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated Trade object
+        in: body
+        name: trade
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Trade'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Trade'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update a trade
+      tags:
+      - trades
+  /trades/{userId}:
+    get:
+      description: Fetches all trades for a specific user
+      parameters:
+      - description: User ID
+        in: path
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Trade'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Fetch user trades
+      tags:
+      - trades
+swagger: "2.0"

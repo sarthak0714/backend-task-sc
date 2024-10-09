@@ -1,0 +1,377 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "portfolio tracking API.",
+        "title": "smallcase Backend Task",
+        "contact": {},
+        "version": "1.0"
+    },
+    "paths": {
+        "/": {
+            "get": {
+                "description": "Returns a simple message indicating the API is working",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "root"
+                ],
+                "summary": "Root endpoint",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/portfolio/{userId}": {
+            "get": {
+                "description": "Fetches the portfolio for a specific user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "portfolio"
+                ],
+                "summary": "Fetch user portfolio",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "userId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.Portfolio"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/returns": {
+            "get": {
+                "description": "Fetches the returns for a specific user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "returns"
+                ],
+                "summary": "Fetch user returns",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "userId",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Returns"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/trades": {
+            "post": {
+                "description": "Adds a new trade to the system",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "trades"
+                ],
+                "summary": "Add a new trade",
+                "parameters": [
+                    {
+                        "description": "Trade object",
+                        "name": "trade",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.Trade"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Trade"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/trades/{id}": {
+            "put": {
+                "description": "Updates an existing trade in the system",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "trades"
+                ],
+                "summary": "Update a trade",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Trade ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Updated Trade object",
+                        "name": "trade",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.Trade"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Trade"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Removes an existing trade from the system",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "trades"
+                ],
+                "summary": "Remove a trade",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Trade ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/trades/{userId}": {
+            "get": {
+                "description": "Fetches all trades for a specific user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "trades"
+                ],
+                "summary": "Fetch user trades",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User ID",
+                        "name": "userId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/domain.Trade"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "domain.Portfolio": {
+            "type": "object",
+            "properties": {
+                "averageBuyPrice": {
+                    "type": "number"
+                },
+                "lastUpdated": {
+                    "type": "string"
+                },
+                "quantity": {
+                    "type": "integer"
+                },
+                "ticker": {
+                    "type": "string"
+                },
+                "userID": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.Returns": {
+            "type": "object",
+            "properties": {
+                "cumulativeReturns": {
+                    "type": "number"
+                },
+                "userId": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.Trade": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "quantity": {
+                    "type": "integer"
+                },
+                "ticker": {
+                    "type": "string"
+                },
+                "timestamp": {
+                    "type": "string"
+                },
+                "type": {
+                    "$ref": "#/definitions/domain.TradeType"
+                },
+                "userId": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.TradeType": {
+            "type": "string",
+            "enum": [
+                "BUY",
+                "SELL"
+            ],
+            "x-enum-varnames": [
+                "Buy",
+                "Sell"
+            ]
+        }
+    }
+}

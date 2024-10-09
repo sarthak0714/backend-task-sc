@@ -16,12 +16,17 @@ type APIHandler struct {
 	portfolioService ports.PortfolioService
 }
 
-// Returns new Handler service
 func NewAPIHandler(tradeService ports.TradeService, portfolioService ports.PortfolioService) *APIHandler {
 	return &APIHandler{tradeService: tradeService, portfolioService: portfolioService}
 }
 
 // Root handler
+// @Summary Root endpoint
+// @Description Returns a simple message indicating the API is working
+// @Tags root
+// @Produce json
+// @Success 200 {object} map[string]string
+// @Router / [get]
 func (h *APIHandler) Root(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]string{
 		"message":   "Works",
@@ -29,7 +34,17 @@ func (h *APIHandler) Root(c echo.Context) error {
 	})
 }
 
-// POST Adds new trade - trade data in body
+// AddTrade adds a new trade
+// @Summary Add a new trade
+// @Description Adds a new trade to the system
+// @Tags trades
+// @Accept json
+// @Produce json
+// @Param trade body domain.Trade true "Trade object"
+// @Success 201 {object} domain.Trade
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /trades [post]
 func (h *APIHandler) AddTrade(c echo.Context) error {
 	trade := new(domain.Trade)
 	if err := c.Bind(trade); err != nil {
@@ -54,7 +69,18 @@ func (h *APIHandler) AddTrade(c echo.Context) error {
 	return c.JSON(http.StatusCreated, trade)
 }
 
-// PUT Updates exisitng trade - trade data in body
+// UpdateTrade updates an existing trade
+// @Summary Update a trade
+// @Description Updates an existing trade in the system
+// @Tags trades
+// @Accept json
+// @Produce json
+// @Param id path int true "Trade ID"
+// @Param trade body domain.Trade true "Updated Trade object"
+// @Success 200 {object} domain.Trade
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /trades/{id} [put]
 func (h *APIHandler) UpdateTrade(c echo.Context) error {
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
@@ -73,7 +99,16 @@ func (h *APIHandler) UpdateTrade(c echo.Context) error {
 	return c.JSON(http.StatusOK, trade)
 }
 
-// DELETE deletes an existing trade - id in param & data in body
+// RemoveTrade deletes an existing trade
+// @Summary Remove a trade
+// @Description Removes an existing trade from the system
+// @Tags trades
+// @Produce json
+// @Param id path int true "Trade ID"
+// @Success 204 "No Content"
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /trades/{id} [delete]
 func (h *APIHandler) RemoveTrade(c echo.Context) error {
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
@@ -87,7 +122,15 @@ func (h *APIHandler) RemoveTrade(c echo.Context) error {
 	return c.NoContent(http.StatusNoContent)
 }
 
-// GET fetches all trades or a user - id in param
+// FetchTrades fetches all trades for a user
+// @Summary Fetch user trades
+// @Description Fetches all trades for a specific user
+// @Tags trades
+// @Produce json
+// @Param userId path string true "User ID"
+// @Success 200 {array} domain.Trade
+// @Failure 500 {object} map[string]string
+// @Router /trades/{userId} [get]
 func (h *APIHandler) FetchTrades(c echo.Context) error {
 	userID := c.Param("userId")
 	trades, err := h.tradeService.FetchTrades(userID)
@@ -98,7 +141,15 @@ func (h *APIHandler) FetchTrades(c echo.Context) error {
 	return c.JSON(http.StatusOK, trades)
 }
 
-// GET fetches portfolio of user - id in params
+// FetchPortfolio fetches portfolio of user
+// @Summary Fetch user portfolio
+// @Description Fetches the portfolio for a specific user
+// @Tags portfolio
+// @Produce json
+// @Param userId path string true "User ID"
+// @Success 200 {array} domain.Portfolio
+// @Failure 500 {object} map[string]string
+// @Router /portfolio/{userId} [get]
 func (h *APIHandler) FetchPortfolio(c echo.Context) error {
 	userID := c.Param("userId")
 	portfolio, err := h.portfolioService.FetchPortfolio(userID)
@@ -109,7 +160,15 @@ func (h *APIHandler) FetchPortfolio(c echo.Context) error {
 	return c.JSON(http.StatusOK, portfolio)
 }
 
-// GET feteches user returns - id in params
+// FetchReturns fetches user returns
+// @Summary Fetch user returns
+// @Description Fetches the returns for a specific user
+// @Tags returns
+// @Produce json
+// @Param userId query string true "User ID"
+// @Success 200 {object} domain.Returns
+// @Failure 500 {object} map[string]string
+// @Router /returns [get]
 func (h *APIHandler) FetchReturns(c echo.Context) error {
 	userID := c.QueryParam("userId")
 	returns, err := h.portfolioService.FetchReturns(userID)
