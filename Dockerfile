@@ -10,13 +10,13 @@ COPY . .
 # Download dependencies
 RUN go mod download
 
-# Install Swagger packages
-RUN go get -u github.com/swaggo/swag/cmd/swag
-RUN go get -u github.com/swaggo/echo-swagger
-RUN go get -u github.com/swaggo/files
+# # Install Swagger packages
+# RUN go get -u github.com/swaggo/swag/cmd/swag
+# RUN go get -u github.com/swaggo/echo-swagger
+# RUN go get -u github.com/swaggo/files
 
-# Generate Swagger documentation
-RUN swag init -g cmd/main.go
+# # Generate Swagger documentation
+# RUN swag init -g cmd/main.go
 
 # Build the application
 RUN go build -o ./bin/server ./cmd/main.go
