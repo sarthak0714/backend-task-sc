@@ -16,7 +16,7 @@ type pgRepository struct {
 }
 
 func NewpgRepository(dbUrl string) (ports.TradeRepository, ports.PortfolioRepository, error) {
-	db, err := gorm.Open(postgres.Open(dbUrl))
+	db, err := gorm.Open(postgres.Open(dbUrl), &gorm.Config{})
 	if err != nil {
 		return nil, nil, err
 	}
@@ -24,10 +24,6 @@ func NewpgRepository(dbUrl string) (ports.TradeRepository, ports.PortfolioReposi
 	repo := &pgRepository{db: db}
 
 	db.AutoMigrate(&domain.Trade{}, &domain.Portfolio{})
-
-	// Add indexes
-	// db.Model(&domain.Trade{}).AddIndex("idx_user_id_ticker", "user_id", "ticker")
-	// db.Model(&domain.Portfolio{}).AddIndex("idx_user_id_ticker", "user_id", "ticker")
 
 	return repo, repo, nil
 }
